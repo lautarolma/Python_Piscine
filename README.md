@@ -1,4 +1,3 @@
-```markdown
 *This project has been created as part of the 42 curriculum by laviles.*
 
 <p align="center">
@@ -59,44 +58,34 @@ Coming from a solid background in C, this project treats Python not just as a sc
 1. **Clone the repository:**
    ```bash
    git clone [https://github.com/youruser/42-python-piscine.git](https://github.com/youruser/42-python-piscine.git) && cd 42-python-piscine
-
-```
+   ```
 
 2. **Environment Setup (Python 3.10+):**
-```bash
-# Create a virtual environment
-python3 -m venv venv
-
-# Activate it
-source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-```
-
+   ```bash
+   # Create a virtual environment
+   python3 -m venv venv
+   
+   # Activate it
+   source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+   
+   # Install dependencies
+   pip install -r requirements.txt
+   ```
 
 3. **Running Exercises:**
-Each module is contained in its own directory. Navigate to the specific exercise and run the main script:
-```bash
-python M01/ex02/simulator.py
-
-```
-
+   Each module is contained in its own directory. Navigate to the specific exercise and run the main script:
+   ```bash
+   python M01/ex02/simulator.py
+   ```
 
 4. **Code Quality:**
-Check compliance with the **flake8** linter (as required by 42 subjects):
-```bash
-flake8 path/to/exercise.py
-
-```
-
-
+   Check compliance with the **flake8** linter (as required by 42 subjects):
+   ```bash
+   flake8 path/to/exercise.py
+   ```
 
 ### 🤖 Methodology & AI Tutoring
-
 The development process follows a **Technical Mentorship** model:
-
 * **Deep Dive Research:** Using AI to analyze the C-source code of Python features (CPython) to understand performance implications.
 * **Edge Case Identification:** Proactive searching for language limits and unexpected behaviors in production-like environments.
 * **Strict Compliance:** All code is validated against **flake8** and utilizes full **type hinting**.
@@ -104,13 +93,8 @@ The development process follows a **Technical Mentorship** model:
 ---
 
 ### 📚 Bibliography
-
 * **Official Python 3.10+ Documentation.**
 * **Fluent Python (Luciano Ramalho):** For advanced implementation patterns.
 * **42 Subject Path:** The pedagogical guide for each module.
 
 > "Abstraction is not about hiding complexity; it's about making it manageable."
-
-```
-
-```
