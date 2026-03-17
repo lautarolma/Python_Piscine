@@ -1,19 +1,24 @@
+class Plant:
+    """
+    General class that organizes the main structure of plant attributes
+    in a garden system.
 
-
-class Plant():
-    """Represent a plant with grow and aging capabilities.
-
-    Atributes:
-        name (str); The species or common name of the plant.
+    Attributes:
+        name (str): Species or common name of the plant.
         height (int): Current height in centimeters.
         age (int): Internal age in days.
     """
 
-    def __init__(self, plant_name: str, height: int = 0, age: int = 0) -> None:
+    def __init__(
+        self,
+        plant_name: str,
+        height: int = 0,
+        age: int = 0,
+    ) -> None:
         """
-        Initialize a Plant instance with name, height and age atributes.
-        Height and age atributes are protected performing flexible user API and also
-        protecting memory integrity in case of a invalid values involved in,
+        Initialize a Plant with name, height and age.
+
+        Height and age are validated through setters to keep values safe.
         """
         self.name = plant_name
         self.__height = 0
@@ -23,75 +28,181 @@ class Plant():
         self.set_age(age)
 
     def get_height(self) -> int:
-        """Returns the height in centimeters of an instance of a class Plant"""
+        """Return the plant height in centimeters."""
         return self.__height
 
-    def set_height(self, value) -> None:
+    def set_height(self, value: int) -> None:
+        """Set plant height if value is a non-negative number."""
         if value < 0:
-            """Invalid imput. Height can not be negative"""            
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: Height cannot be negative")
         else:
             self.__height = value
 
-    def get_age (self) -> int:
-        """"Returns the Plant instance height in centimeters"""
+    def get_age(self) -> int:
+        """Return the plant age in days."""
         return self.__age
 
-    def set_age (self, value) -> None:
+    def set_age(self, value: int) -> None:
+        """Set plant age if value is a non-negative number."""
         if value < 0:
-            """Invalid imput. Age can not be negative"""            
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: Age cannot be negative")
         else:
             self.__age = value
 
 
 class Flower(Plant):
     """
-	Subclas of Plant class with special atribut: "color",
-    and an special method: blooming.
+    Subclass of Plant with an extra attribute: color,
+    and a special method: Bloom().
     """
 
     def __init__(
-                self, name: str, height: int, age: int, 
-                color: str = "N/A"
-                ) -> None:
-        """
-        """
+        self,
+        name: str,
+        height: int,
+        age: int,
+        color: str = "N/A",
+    ) -> None:
+        """Initialize a Flower with name, height, age and color."""
         super().__init__(name, height, age)
         self.__color = "N/A"
         self.set_color(color)
 
     def __str__(self) -> str:
         return (
-                    f"{self.name} (Flower): {self.get_height()}cm, {self.get_age()}"
-                    f" days, {self.get_color()} color)"
-                )
+            f"{self.name} (Flower): {self.get_height()}cm, {self.get_age()}"
+            f" days, {self.get_color()} color"
+        )
 
     def get_color(self) -> str:
-        """Safe acces to Flower.color atribute."""
+        """Return flower color value."""
         return self.__color
 
     def set_color(self, color: str) -> None:
         """
-        Validates and assigne the color value.
-
-        Invalid Values:
-        - Not a string type value.
-        - Empty string value. For example "      ".
+        Set flower color if value is a non-empty string.
         """
         if isinstance(color, str) and color.strip():
             self.__color = color
         else:
             print(f"Invalid operation attempted: color '{color}' [REJECTED]")
-            print("Security: Colr must be a non-empty string")
+            print("Security: Color must be a non-empty string")
 
-    def Bloom(self) -> None:
-        """
-        Emulate a blooming action.
-
-        Gets a name from father constructor.
-        """
-        print(f"{self.get_name} is blooming beautifully! ")
+    def bloom(self) -> None:
+        """Print a simple blooming action message."""
+        print(f"{self.name} is blooming beautifully! ")
 
 
-if	__name__ == "__main__":
-    rose = Flower("Rose", 24, 12, "white")
+class Tree(Plant):
+    """
+    Subclass of Plant with extra attribute: trunk_diameter,
+    and a special method: produce_shade().
+    """
+    def __init__(
+        self,
+        name: str,
+        height: int = 0,
+        age: int = 0,
+        trunk_diameter: int = 0,
+    ) -> None:
+        """Initialize a Tree with name, height, age and trunk diameter."""
+        super().__init__(name, height, age)
+        self.__trunk_diameter = 0
+        self.shade = 0
+
+        self.set_trunk_diameter(trunk_diameter)
+
+    def __str__(self) -> str:
+        """Return a readable string representation of the tree."""
+        return (
+            f"{self.name} (Tree): {self.get_height()}cm,"
+            f" {self.get_age()} days, {self.get_trunk_diameter()}cm"
+            f" diameter"
+        )
+
+    def get_trunk_diameter(self) -> int:
+        """Return trunk diameter value."""
+        return self.__trunk_diameter
+
+    def set_trunk_diameter(self, value: int) -> None:
+        """Set trunk diameter if value is a non-negative number."""
+        if isinstance(value, (int, float)) and value >= 0:
+            self.__trunk_diameter = value
+        else:
+            print(f"Invalid diameter '{value}' [REJECTED]")
+            print("Security: Diameter must be a non-negative number")
+
+    def produce_shade(self, value: int) -> None:
+        """A simple print of the shade area generated by the tree."""
+        print(f"{self.name} provides {value} square meters of shade")
+
+
+class Vegetable(Plant):
+    """
+    Subclass of Plant with extra attribute harvest_season,
+    and a special method: nutritional_value().
+    """
+    def __init__(
+        self,
+        name: str,
+        height: int = 0,
+        age: int = 0,
+        harvest_season: str = "N/A",
+    ) -> None:
+        """Initialize a Vegetable with name, height, age and harvest season."""
+        super().__init__(name, height, age)
+        self.__harvest_season = "N/A"
+        self.set_harvest_season(harvest_season)
+
+    def __str__(self) -> str:
+        """Return a readable string representation of the vegetable."""
+        return (
+            f"{self.name} (Vegetable): {self.get_height()}cm,"
+            f" {self.get_age()} days, {self.get_harvest_season()} harvest"
+        )
+
+    def get_harvest_season(self) -> str:
+        """Return harvest season value."""
+        return self.__harvest_season
+
+    def set_harvest_season(self, value: str) -> None:
+        """Set harvest season if value is a non-empty string."""
+        if isinstance(value, str) and value.strip():
+            self.__harvest_season = value
+        else:
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: Harvest_season must be a season name")
+
+    def nutritional_value(self, value: str) -> None:
+        """Print a basic nutritional message for the vegetable."""
+        print(f"{self.name} is rich in vitamin {value}")
+
+
+if __name__ == "__main__":
+    print("=== Garden Plant Types ===")
+    print()
+    rose = Flower("Rose", 25, 30, "red")
     print(rose)
+    rose.bloom()
+    print()
+    lavender = Flower("Lavender", 35, 50, "purple")
+    print(lavender)
+    lavender.bloom()
+    print()
+    oak = Tree("Oak", 500, 1825, 50)
+    print(oak)
+    oak.produce_shade(78)
+    print()
+    pine = Tree("Pine", 1200, 850, 45)
+    print(pine)
+    pine.produce_shade(168)
+    print()
+    tomato = Vegetable("Tomato", 80, 90, "summer")
+    print(tomato)
+    tomato.nutritional_value("C")
+    print()
+    carrot = Vegetable("Carrot", 15, 80, "spring")
+    print(carrot)
+    carrot.nutritional_value("A")
