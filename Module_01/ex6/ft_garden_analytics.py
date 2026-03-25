@@ -1,139 +1,322 @@
-from __future__ import annotations
+"""Garden analytics module.
 
-from typing import List
-
+This module defines a simple garden analytics system with classes for
+plants, flowers, trees, and seeds. It includes methods for tracking
+growth, aging, blooming, and shade production, along with statistics
+for method calls. The `main` function demonstrates the behavior of the
+classes and their interactions.
+"""
 
 class Plant:
-	def __init__(
-		self,
-		name: str,
-		species: str,
-		age_days: int,
-		height_cm: float,
-		health_status: str = "healthy",
-	) -> None:
-		self.name = name
-		self.species = species
-		self.age_days = age_days
-		self.height_cm = height_cm
-		self.health_status = health_status
+    """
+    Base class that defines common plant data in a garden system.
+
+    Attributes:
+        name (str): Species or common name of the plant.
+        height (float): Current height in centimeters.
+        age (int): Internal age in days.
+    """
+
+    class Stats:
+        """
+        Internal call counters for `grow`, `age`, and `show` methods.
+
+        This helper class tracks and displays per-instance method-call statistics.
+        """
+        def __init__(self) -> None:
+            """Initialize call counters for tracked methods.
+
+            Initializes counters for:
+                - grow method calls
+                - age method calls
+                - show method calls
+            """
+            self._grow_calls = 0
+            self._age_calls = 0
+            self._show_calls = 0
+
+        def record_grow_call(self) -> None:
+            """Increment the grow method call counter by one."""
+            self._grow_calls += 1
+
+        def record_age_call(self) -> None:
+            """Increment the age method call counter by one."""
+            self._age_calls += 1
+
+        def record_show_call(self) -> None:
+            """Increment the show method call counter by one."""
+            self._show_calls += 1
+
+        def display(self) -> None:
+            """Display method-call statistics for the current instance."""
+            print(
+                    f"Stats: {self._grow_calls} grow, {self._age_calls}"
+                    f" age, {self._show_calls} show"
+            )
+
+    def __init__(
+        self,
+        name: str,
+        height: float = 0.0,
+        age: int = 0
+    ) -> None:
+        """
+        Initialize a Plant with name, height, and age.
+
+        Height and age are validated through their setters to ensure safe values.
+        """
+        self.name = name
+        self.__height = float(0.0)
+        self.__age = 0
+
+        self.set_height(height)
+        self.set_age(age)
+        self._stats = self.Stats()
+
+    def get_height(self) -> float:
+        """Return the plant height in centimeters."""
+        return self.__height
+
+    def set_height(self, value: float) -> None:
+        """Set the plant height if the value is non-negative."""
+        if value < 0:
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: Height cannot be negative")
+        else:
+            self.__height = float(value)
+
+    def get_age(self) -> int:
+        """Return the plant age in days."""
+        return self.__age
+
+    def set_age(self, value: int) -> None:
+        """Set the plant age if the value is non-negative."""
+        if value < 0:
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: Age cannot be negative")
+        else:
+            self.__age = value
+
+    def age(self, amount: int = 1) -> None:
+        """Increment the plant's age by the specified amount."""
+        self._stats.record_age_call()
+        self.__age += amount
+
+    def grow(self, amount: float = 1.0) -> None:
+        """Increase the plant's height by the specified amount."""
+        self._stats.record_grow_call()
+        self.__height += float(amount)
+
+    def show(self) -> None:
+        """Display a one-line summary of the plant's current state."""
+        self._stats.record_show_call()
+        print(f"{self.name}: {self.get_height()}cm, {self.get_age()} days old")
+
+    def show_statistics(self) -> None:
+        """Display method-call statistics for the current plant instance."""
+        print(f"[statistics for {self.name}]")
+        self._stats.display()
+
+    @staticmethod
+    def is_older_than_a_year(days: int) -> bool:
+        """Return True when the given number of days is greater than 365."""
+        if days > 365:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def create_anonymous(cls) -> "Plant":
+        """Create and return a generic unnamed plant instance."""
+        return cls("Unknown plant")
 
 
 class Flower(Plant):
-	def __init__(
-		self,
-		name: str,
-		species: str,
-		age_days: int,
-		height_cm: float,
-		color: str,
-		petals_count: int,
-		is_blooming: bool,
-		fragrance_level: int,
-		health_status: str = "healthy",
-	) -> None:
-		super().__init__(
-			name=name,
-			species=species,
-			age_days=age_days,
-			height_cm=height_cm,
-			health_status=health_status,
-		)
-		self.color = color
-		self.petals_count = petals_count
-		self.is_blooming = is_blooming
-		self.fragrance_level = fragrance_level
+    """Plant specialization that tracks color and blooming state."""
+
+    def __init__(
+        self,
+        name: str,
+        height: float = 0.0,
+        age: int = 0,
+        color: str = "unknown",
+        is_blooming: bool = False
+    ) -> None:
+        """Initialize a Flower with color and blooming state attributes."""
+        super().__init__(name, height, age)
+        self.is_blooming = is_blooming 
+        self.__color = "unknown"
+        self.set_color(color)
+
+    def get_color(self) -> str:
+        """Return the flower's color."""
+        return self.__color
+
+    def set_color(self, value: object) -> None:
+        """Set the flower's color if the input value is a valid string."""
+        if isinstance(value, str):
+            self.__color = value
+        else:
+            print(f"Invalid input '{value}' [REJECTED]")
+            print(f"Security: color must be a string")
+
+    def bloom(self) -> None:
+        """Mark the flower as currently blooming."""
+        self.is_blooming = True
+
+    def show(self) -> None:
+        """Display the flower's information, including color and blooming status."""
+        super().show()
+        print(f" Color: {self.get_color()}")
+        if self.is_blooming:
+            print(f" {self.name} is blooming beautifully!")
+        else:
+            print(f" {self.name} has not bloomed yet")
 
 
 class Tree(Plant):
-	def __init__(
-		self,
-		name: str,
-		species: str,
-		age_days: int,
-		height_cm: float,
-		trunk_diameter_cm: float,
-		is_evergreen: bool,
-		fruit_type: str | None = None,
-		health_status: str = "healthy",
-	) -> None:
-		super().__init__(
-			name=name,
-			species=species,
-			age_days=age_days,
-			height_cm=height_cm,
-			health_status=health_status,
-		)
-		self.trunk_diameter_cm = trunk_diameter_cm
-		self.is_evergreen = is_evergreen
-		self.fruit_type = fruit_type
+    """Plant specialization that models trunk diameter and shade production."""
+
+    class Stats(Plant.Stats):
+        """
+        Extend Plant._Stats with produce_shade call tracking.
+
+        Customizes the statistics output to include shade production calls.
+        """
+        def __init__(self) -> None:
+            """Initialize counters including produce_shade method calls."""
+            super().__init__()
+            self._shade_calls: int = 0
+
+        def record_shade_call(self) -> None:
+            """Increment the produce_shade method call counter by one."""
+            self._shade_calls += 1
+
+        def display(self) -> None:
+            """
+            Display method-call statistics for the current Tree instance.
+            """
+            super().display()
+            print(f" {self._shade_calls} shade")
+
+    def __init__(
+        self,
+        name: str,
+        height: float = 0.0,
+        age: int = 0,
+        trunk_diameter: float = 0.0,
+    ) -> None:
+        """Initialize a Tree with trunk diameter tracking."""
+        super().__init__(name, height, age)
+        self._stats = self.Stats()
+        self.__trunk_diameter = 0.0
+
+        self.set_trunk_diameter(trunk_diameter)
+    def get_trunk_diameter(self) -> float:
+        """Return the trunk diameter in centimeters."""
+        return self.__trunk_diameter
+
+    def set_trunk_diameter(self, value: float) -> None:
+        """Set the trunk diameter if the value is non-negative."""
+        if value < 0:
+            print(f"Invalid input '{value}' [REJECTED]")
+            print("Security: trunk_diameter cannot be negative")
+        else:
+            self.__trunk_diameter = float(value)
+
+    def produce_shade(self) -> None:
+        """Record and display the tree's current shade production details."""
+        self._stats.record_shade_call()
+        print(
+                f"Tree {self.name} now produces a shade of {self.get_height()}"
+                f"cm long and {self.get_trunk_diameter()}cm wide."
+        )
+
+    def show(self) -> None:
+        """Display the tree's information and trunk diameter."""
+        super().show()
+        print(f" Trunk diameter: {self.get_trunk_diameter()}cm")
 
 
-class Garden:
-	def __init__(
-		self,
-		owner: str,
-		location: str,
-		flowers: List[Flower] | None = None,
-		trees: List[Tree] | None = None,
-	) -> None:
-		self.owner = owner
-		self.location = location
-		self.flowers = flowers if flowers is not None else []
-		self.trees = trees if trees is not None else []
+class Seed(Flower):
+    """Flower specialization that tracks seed production."""
 
-	@property
-	def plants(self) -> List[Plant]:
-		return [*self.flowers, *self.trees]
+    def __init__(
+        self,
+        name: str,
+        height: float = 0.0,
+        age: int = 0,
+        color: str = "unknown",
+        is_blooming: bool = False,
+        seed_count: int = 0,
+    ) -> None:
+        """Initialize a seed-bearing Flower with an initial seed count."""
+        super().__init__(name, height, age, color)
+        self.__seed_count = 0
 
+    def get_seed_count(self) -> int:
+        """Return the current number of seeds produced by the flower."""
+        return self.__seed_count
 
-def build_bob_garden() -> Garden:
-	flowers = [
-		Flower(
-			name="Daisy",
-			species="Bellis perennis",
-			age_days=45,
-			height_cm=21.0,
-			color="white",
-			petals_count=34,
-			is_blooming=True,
-			fragrance_level=2,
-		),
-		Flower(
-			name="Rose",
-			species="Rosa rubiginosa",
-			age_days=90,
-			height_cm=58.0,
-			color="red",
-			petals_count=40,
-			is_blooming=True,
-			fragrance_level=8,
-		),
-	]
+    def set_seed_count(self, amount: int) -> None:
+        """Update the number of seeds for the instance."""
+        if amount < 0:
+            print(f"Invalid input '{amount}' [REJECTED]")
+            print("Security: Seed count cannot be negative")
+        else:
+            self.__seed_count = amount
 
-	trees = [
-		Tree(
-			name="Olive",
-			species="Olea europaea",
-			age_days=1500,
-			height_cm=245.0,
-			trunk_diameter_cm=18.5,
-			is_evergreen=True,
-			fruit_type="olive",
-		),
-		Tree(
-			name="Apple",
-			species="Malus domestica",
-			age_days=1200,
-			height_cm=310.0,
-			trunk_diameter_cm=22.0,
-			is_evergreen=False,
-			fruit_type="apple",
-		),
-	]
-
-	return Garden(owner="Bob", location="Backyard", flowers=flowers, trees=trees)
+    def show(self) -> None:
+        """Display the flower's information and current seed count."""
+        super().show()
+        print(f" Seeds: {self.get_seed_count()}")
 
 
-bob_garden = build_bob_garden()
- 
+def display_plant_statistics(plant: Plant) -> None:
+    """Display method-call statistics for any Plant instance."""
+    plant.show_statistics()
+
+
+def main() -> None:
+    """Execute demonstration scenarios for the garden analytics system."""
+    print("=== Garden statistics ===")
+    print("=== Check year-old")
+    print(f"Is 30 days more than a year? -> {Plant.is_older_than_a_year(30)}")
+    print(f"Is 400 days more than a year? -> {Plant.is_older_than_a_year(400)}")
+
+    print("\n=== Flower")
+    rose = Flower("Rose", 15, 10, "red")
+    rose.show()
+    rose.show_statistics()
+    print("[asking the rose to grow and bloom]")
+    rose.grow(8)
+    rose.bloom()
+    rose.show()
+    rose.show_statistics()
+
+    print("\n=== Tree")
+    oak = Tree("Oak", 200, 365, 5)
+    oak.show()
+    oak.show_statistics()
+    print("[asking the oak to produce shade]")
+    oak.produce_shade()
+    oak.show_statistics()
+
+    print("\n=== Seed")
+    sunflower = Seed("Sunflower", 80, 45, "yellow")
+    sunflower.show()
+    print("[make sunflower grow, age and bloom]")
+    sunflower.grow(30)
+    sunflower.age(20)
+    sunflower.bloom()
+    sunflower.set_seed_count(42)
+    sunflower.show()
+    sunflower.show_statistics()
+
+    print("\n=== Anonymous")
+    unknown_plant = Plant.create_anonymous()
+    unknown_plant.show()
+    unknown_plant.show_statistics()
+
+if __name__ == "__main__":
+    main()
