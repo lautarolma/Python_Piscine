@@ -1,6 +1,8 @@
-#!/usr/bin/env python3
 """
 Implementation of a seed inventory management in a garden system(Ex 0 - M01).
+
+# Just in case for the evaluation:
+# #!/usr/bin/env python3
 """
 
 

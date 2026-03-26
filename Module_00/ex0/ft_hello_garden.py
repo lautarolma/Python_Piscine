@@ -1,5 +1,4 @@
 def ft_hello_garden():
-"""Simple function wich display a welcome message"""
-
+    """Simple function which displays a welcome message"""
     message = "Hello, Garden Community!"
     print(message)

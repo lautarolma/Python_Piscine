@@ -11,7 +11,11 @@ or negative inputs and reports them through specific error messages.
 class Plant:
     """Represents a plant with protected attributes."""
 
-    def __init__(self, plant_name: str, height: float = 0, age: int = 0) -> None:
+    def __init__(
+            self,
+            plant_name: str,
+            height: float = 0,
+            age: int = 0) -> None:
         """
         Initializes a Plant instance with name, height and age
         attributes.
@@ -28,7 +32,8 @@ class Plant:
 
     def show(self) -> None:
         """Display current plant state in the required format."""
-        print(f"{self._name}: {self.get_height()}cm, {self.get_age()} days old")
+        print(f"{self._name}: {self.get_height()}cm, "
+              f"{self.get_age()} days old")
 
     def get_age(self) -> int:
         """Safe reading access to age"""
@@ -73,7 +78,6 @@ class Plant:
             self._height = 0.0
         else:
             self._height = float(amount)
-
 
 
 if __name__ == "__main__":

@@ -1,6 +1,5 @@
 def ft_seed_inventory(seed_type: str, quantity: int, unit: str) -> None:
-"""Displays an seed inventory and validates the types of known units"""
-
+    """Displays an seed inventory and validates the types of known units"""
     seed_type = seed_type.capitalize()
     if unit == "packets":
         print(f"{seed_type} seeds: {quantity} packets available")

@@ -1,6 +1,5 @@
 def ft_plot_area():
-"""It calculates the area of the received parameters and displays them on the screen."""
-
+    """Calculates area of parameters and displays on screen."""
     length = int(input("Enter length: "))
     width = int(input("Enter width: "))
 

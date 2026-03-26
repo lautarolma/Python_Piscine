@@ -41,7 +41,9 @@ class Plant:
 
     def show(self) -> None:
         """Display basic plant information."""
-        print(f"{self.name}: {round(self.get_height(), 1)}cm, {self.get_age()} days old")
+        print(
+            f"{self.name}: {round(self.get_height(), 1)}cm, "
+            f"{self.get_age()} days old")
 
 
 class Flower(Plant):

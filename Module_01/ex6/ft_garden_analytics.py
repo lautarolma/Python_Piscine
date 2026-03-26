@@ -7,6 +7,7 @@ for method calls. The `main` function demonstrates the behavior of the
 classes and their interactions.
 """
 
+
 class Plant:
     """
     Base class that defines common plant data in a garden system.
@@ -21,8 +22,9 @@ class Plant:
         """
         Internal call counters for `grow`, `age`, and `show` methods.
 
-        This helper class tracks and displays per-instance method-call statistics.
+        Helper class tracking per-instance method-call stats.
         """
+
         def __init__(self) -> None:
             """Initialize call counters for tracked methods.
 
@@ -50,8 +52,8 @@ class Plant:
         def display(self) -> None:
             """Display method-call statistics for the current instance."""
             print(
-                    f"Stats: {self._grow_calls} grow, {self._age_calls}"
-                    f" age, {self._show_calls} show"
+                f"Stats: {self._grow_calls} grow, {self._age_calls}"
+                f" age, {self._show_calls} show"
             )
 
     def __init__(
@@ -63,11 +65,11 @@ class Plant:
         """
         Initialize a Plant with name, height, and age.
 
-        Height and age are validated through their setters to ensure safe values.
+        Height and age validated via setters for safety.
         """
         self.name = name
-        self.__height = float(0.0)
-        self.__age = 0
+        self._height = float(0.0)
+        self._age = 0
 
         self.set_height(height)
         self.set_age(age)
@@ -75,7 +77,7 @@ class Plant:
 
     def get_height(self) -> float:
         """Return the plant height in centimeters."""
-        return self.__height
+        return self._height
 
     def set_height(self, value: float) -> None:
         """Set the plant height if the value is non-negative."""
@@ -83,11 +85,11 @@ class Plant:
             print(f"Invalid input '{value}' [REJECTED]")
             print("Security: Height cannot be negative")
         else:
-            self.__height = float(value)
+            self._height = float(value)
 
     def get_age(self) -> int:
         """Return the plant age in days."""
-        return self.__age
+        return self._age
 
     def set_age(self, value: int) -> None:
         """Set the plant age if the value is non-negative."""
@@ -95,17 +97,17 @@ class Plant:
             print(f"Invalid input '{value}' [REJECTED]")
             print("Security: Age cannot be negative")
         else:
-            self.__age = value
+            self._age = value
 
     def age(self, amount: int = 1) -> None:
         """Increment the plant's age by the specified amount."""
         self._stats.record_age_call()
-        self.__age += amount
+        self._age += amount
 
     def grow(self, amount: float = 1.0) -> None:
         """Increase the plant's height by the specified amount."""
         self._stats.record_grow_call()
-        self.__height += float(amount)
+        self._height += float(amount)
 
     def show(self) -> None:
         """Display a one-line summary of the plant's current state."""
@@ -144,28 +146,28 @@ class Flower(Plant):
     ) -> None:
         """Initialize a Flower with color and blooming state attributes."""
         super().__init__(name, height, age)
-        self.is_blooming = is_blooming 
-        self.__color = "unknown"
+        self.is_blooming = is_blooming
+        self._color = "unknown"
         self.set_color(color)
 
     def get_color(self) -> str:
         """Return the flower's color."""
-        return self.__color
+        return self._color
 
     def set_color(self, value: object) -> None:
         """Set the flower's color if the input value is a valid string."""
         if isinstance(value, str):
-            self.__color = value
+            self._color = value
         else:
             print(f"Invalid input '{value}' [REJECTED]")
-            print(f"Security: color must be a string")
+            print("Security: color must be a string")
 
     def bloom(self) -> None:
         """Mark the flower as currently blooming."""
         self.is_blooming = True
 
     def show(self) -> None:
-        """Display the flower's information, including color and blooming status."""
+        """Display flower's information (color and blooming info)."""
         super().show()
         print(f" Color: {self.get_color()}")
         if self.is_blooming:
@@ -183,6 +185,7 @@ class Tree(Plant):
 
         Customizes the statistics output to include shade production calls.
         """
+
         def __init__(self) -> None:
             """Initialize counters including produce_shade method calls."""
             super().__init__()
@@ -209,12 +212,13 @@ class Tree(Plant):
         """Initialize a Tree with trunk diameter tracking."""
         super().__init__(name, height, age)
         self._stats = self.Stats()
-        self.__trunk_diameter = 0.0
+        self._trunk_diameter = 0.0
 
         self.set_trunk_diameter(trunk_diameter)
+
     def get_trunk_diameter(self) -> float:
         """Return the trunk diameter in centimeters."""
-        return self.__trunk_diameter
+        return self._trunk_diameter
 
     def set_trunk_diameter(self, value: float) -> None:
         """Set the trunk diameter if the value is non-negative."""
@@ -222,14 +226,15 @@ class Tree(Plant):
             print(f"Invalid input '{value}' [REJECTED]")
             print("Security: trunk_diameter cannot be negative")
         else:
-            self.__trunk_diameter = float(value)
+            self._trunk_diameter = float(value)
 
     def produce_shade(self) -> None:
         """Record and display the tree's current shade production details."""
-        self._stats.record_shade_call()
+        if isinstance(self._stats, self.Stats):
+            self._stats.record_shade_call()
         print(
-                f"Tree {self.name} now produces a shade of {self.get_height()}"
-                f"cm long and {self.get_trunk_diameter()}cm wide."
+            f"Tree {self.name} now produces a shade of {self.get_height()}"
+            f"cm long and {self.get_trunk_diameter()}cm wide."
         )
 
     def show(self) -> None:
@@ -252,11 +257,11 @@ class Seed(Flower):
     ) -> None:
         """Initialize a seed-bearing Flower with an initial seed count."""
         super().__init__(name, height, age, color)
-        self.__seed_count = 0
+        self._seed_count = 0
 
     def get_seed_count(self) -> int:
         """Return the current number of seeds produced by the flower."""
-        return self.__seed_count
+        return self._seed_count
 
     def set_seed_count(self, amount: int) -> None:
         """Update the number of seeds for the instance."""
@@ -264,7 +269,7 @@ class Seed(Flower):
             print(f"Invalid input '{amount}' [REJECTED]")
             print("Security: Seed count cannot be negative")
         else:
-            self.__seed_count = amount
+            self._seed_count = amount
 
     def show(self) -> None:
         """Display the flower's information and current seed count."""
@@ -282,7 +287,8 @@ def main() -> None:
     print("=== Garden statistics ===")
     print("=== Check year-old")
     print(f"Is 30 days more than a year? -> {Plant.is_older_than_a_year(30)}")
-    print(f"Is 400 days more than a year? -> {Plant.is_older_than_a_year(400)}")
+    print(
+        f"Is 400 days more than a year? -> {Plant.is_older_than_a_year(400)}")
 
     print("\n=== Flower")
     rose = Flower("Rose", 15, 10, "red")
@@ -317,6 +323,7 @@ def main() -> None:
     unknown_plant = Plant.create_anonymous()
     unknown_plant.show()
     unknown_plant.show_statistics()
+
 
 if __name__ == "__main__":
     main()

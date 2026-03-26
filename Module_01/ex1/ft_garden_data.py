@@ -23,6 +23,7 @@ class Plant:
         """Display the information of a Plant instance."""
         print(f"{self.name}: {self.height}cm, {self.age} days old")
 
+
 def ft_garden_data() -> None:
     """Data manager of a garden system of several plants"""
     garden: list[Plant] = []
