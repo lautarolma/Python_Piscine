@@ -4,14 +4,24 @@ This is a Garden Data Organizer wich can track multiple plants information.
 
 
 class Plant:
-    """Plants in a garden system."""
+    """
+    Represent a plant with growth and aging capabilities.
+
+    Atributes:
+        name (str): The species or common name of the plant.
+        height (int); Current height in centimeters.
+        _age (int): Internal age in days.
+    """
 
     def __init__(self, plant_name: str, height: int, age: int) -> None:
-        """Definicion of instances atributes of a Plant class."""
+        """Initialize a new Plant instance."""
         self.name = plant_name
         self.height = height
         self.age = age
 
+    def show(self) -> None:
+        """Display the information of a Plant instance."""
+        print(f"{self.name}: {self.height}cm, {self.age} days old")
 
 def ft_garden_data() -> None:
     """Data manager of a garden system of several plants"""
@@ -22,7 +32,7 @@ def ft_garden_data() -> None:
 
     print("=== Garden Plant Registry ===")
     for p in garden:
-        print(f"{p.name}: {p.height}cm, {p.age} days old")
+        p.show()
 
 
 if __name__ == "__main__":

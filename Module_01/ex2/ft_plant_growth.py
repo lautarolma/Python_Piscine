@@ -6,7 +6,7 @@ process of several plant species in a controled environment.
 """
 
 
-class Plant():
+class Plant:
     """
     Represent a plant with growth and aging capabilities.
 
@@ -16,23 +16,34 @@ class Plant():
         _age (int): Internal age in days.
     """
 
-    def __init__(self, plant_name: str, height: int, _age: int) -> None:
+    def __init__(
+        self,
+        plant_name: str,
+        height: float,
+        _age: int,
+        growth_rate: float = 0.8
+    ) -> None:
         """Initialize a new Plant instance."""
         self.name = plant_name
         self.height = height
         self._age = _age
+        self.growth_rate = growth_rate
+
+    def show(self) -> None:
+        """Display the information of a Plant instance."""
+        print(f"{self.name}: {round(self.height, 1)}cm, {self._age} days old")
 
     def age(self) -> None:
         """Increment the plant's internal age by one day."""
         self._age += 1
 
-    def grow(self, amount: int = 1) -> None:
-        """Increment the plant's height by the specified amount."""
-        self.height += amount
+    def grow(self) -> None:
+        """Increment the plant's height using its own growth rate."""
+        self.height += self.growth_rate
 
-    def get_info(self) -> str:
-        """Return a formatted string with the current plant status."""
-        return f"{self.name}: {self.height}cm, {self._age} days old"
+    def get_height(self) -> float:
+        """Return current plant height in centimeters."""
+        return self.height
 
 
 def ft_plant_growth() -> None:
@@ -41,21 +52,22 @@ def ft_plant_growth() -> None:
 
     Calculate the growth size and display state changes.
     """
-    garden: list[Plant] = [
-        Plant("Rose", 25, 30),
-        Plant("Cactus", 15, 45),
-        Plant("Jasmin", 50, 30)
-    ]
-    print("=== Day 1 ===")
-    for p in garden:
-        print(p.get_info())
-    print("=== Day 7 ===")
-    for p in garden:
-        for i in range(7):
-            p.grow()
-            p.age()
-        print(p.get_info())
-        print(f"Grow this week: +{i + 1}cm")
+
+    garden: list[Plant] = []
+    garden.append(Plant("Rose", 24.2, 29))
+    growth_days = 7
+
+    print("=== Garden Plant Growth ===")
+    for day in range(1, growth_days + 1):
+        for plant in garden:
+            plant.grow()
+            plant.age()
+
+        print(f"=== Day {day} ===")
+        for plant in garden:
+            plant.show()
+    week_growth = round(garden[0].growth_rate * growth_days)
+    print(f"Growth this week: {week_growth}cm")
 
 
 if __name__ == "__main__":

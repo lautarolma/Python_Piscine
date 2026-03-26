@@ -14,23 +14,23 @@ class Plant():
         _age (int): Internal age in days.
     """
 
-    def __init__(self, plant_name: str, height: int, _age: int) -> None:
+    def __init__(self, plant_name: str, height: float, _age: int) -> None:
         """Initialize a new Plant instance."""
         self.name = plant_name
-        self.height = height
+        self.height = float(height)
         self._age = _age
 
     def age(self) -> None:
         """Increment the plant's internal age by one day."""
         self._age += 1
 
-    def grow(self, amount: int = 1) -> None:
+    def grow(self, amount: float = 1.0) -> None:
         """Increment the plant's height by the specified amount."""
         self.height += amount
 
-    def get_info(self) -> str:
-        """Return a formatted string with the current plant status."""
-        return f"Created: {self.name} ({self.height}cm, {self._age} days)"
+    def show(self) -> None:
+        """Display the information of a Plant instance."""
+        print(f"Created: {self.name}: {self.height}cm, {self._age} days old")
 
 
 def ft_plant_factory() -> None:
@@ -38,22 +38,21 @@ def ft_plant_factory() -> None:
     Streamline creation process for many plants, quickly, using Plant class
     with different starting values.
     """
-    raw_data: list = [
+    raw_data: list[tuple[str, int, int]] = [
         ("Rose", 25, 30),
         ("Oak", 200, 365),
         ("Cactus", 5, 90),
         ("Sunflower", 80, 45),
-        ("Fern", 15, 120)
+        ("Fern", 15, 120),
     ]
-    garden: list[Plant] = [None] * 5
+    garden: list[Plant] = []
 
-    for i in range(5):
-        name, height, _age = raw_data[i]
-        garden[i] = Plant(name, height, _age)
+    for name, height, age in raw_data:
+        garden.append(Plant(name, height, age))
+
     print("=== Plant Factory Output ===")
     for p in garden:
-        print(p.get_info())
-    print(f"\nTotal plants created: {i + 1}")
+        p.show()
 
 
 if __name__ == "__main__":

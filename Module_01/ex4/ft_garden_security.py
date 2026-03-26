@@ -1,81 +1,94 @@
 """
 Garden Security System Module.
 
-Provides a SecurePlant class that implements encapsulation to protect object
+Provides a Plant class that implements encapsulation to protect object
 consistency. It validates data before storage, ensuring strict control over
 how plant attributes are modified and accessed. The system intercepts invalid
 or negative inputs and reports them through specific error messages.
 """
 
 
-class SecurePlant():
-    """Represents a plant with protected attributes via Name Mangling."""
+class Plant:
+    """Represents a plant with protected attributes."""
 
-    def __init__(self, plant_name: str, height: int = 0, age: int = 0) -> None:
+    def __init__(self, plant_name: str, height: float = 0, age: int = 0) -> None:
         """
-        Initializes a SecurePlant instance with name, height and age
+        Initializes a Plant instance with name, height and age
         attributes.
 
         Attributes are protected to provide a flexible user API while ensuring
         internal state integrity, even when invalid values are provided.
         """
-        self.__name = plant_name
-        self.__height = 0
-        self.__age = 0
-#       The initialization before prevents atribute creation from invalid
-#       inputs
+        self._name = plant_name
+        self._height = 0.0
+        self._age = 0
 
-        print(f"Plant created: {self.__name}")
+        self.init_height(height)
+        self.init_age(age)
 
-        self.set_height(height)
-        self.set_age(age)
-
-    def __str__(self) -> str:
-        """
-        Special method to fetch the object in a string format.
-        Its internally called by the action print(object).
-        """
-        return (
-                    f"Current plant: {self.__name} ({self.__height}cm, "
-                    f"{self.__age} days)"
-                )
+    def show(self) -> None:
+        """Display current plant state in the required format."""
+        print(f"{self._name}: {self.get_height()}cm, {self.get_age()} days old")
 
     def get_age(self) -> int:
         """Safe reading access to age"""
-        return self.__age
+        return self._age
 
-    def set_age(self, value) -> None:
+    def set_age(self, value: int) -> None:
         """Validate modification of age"""
         if value < 0:
-            print(
-                    f"\nInvalid operation attempted: "
-                    f"age {value} days [REJECTED]"
-            )
-            print("Security: Negative age rejected")
+            print(f"{self._name}: Error, age can't be negative")
+            print("Age update rejected")
         else:
-            self.__age = value
-            print(f"Age updated: {value} days [OK]")
+            self._age = value
+            print(f"Age updated: {self._age} days")
 
-    def get_height(self) -> int:
+    def init_age(self, value: int) -> None:
+        """Initialize age with default fallback when value is invalid."""
+        if value < 0:
+            print(f"{self._name}: Error, age can't be negative")
+            print("Age update rejected")
+            self._age = 0
+        else:
+            self._age = value
+
+    def get_height(self) -> float:
         """Safe reading access to height"""
-        return self.__height
+        return self._height
 
-    def set_height(self, amount: int) -> None:
+    def set_height(self, amount: float) -> None:
         """Validate modification of height"""
         if amount < 0:
-            print(
-                    f"\nInvalid operation attempted: "
-                    f"height {amount}cm [REJECTED]"
-            )
-            print("Security: Negative height rejected")
+            print(f"{self._name}: Error, height can't be negative")
+            print("Height update rejected")
         else:
-            self.__height = amount
-            print(f"Height updated: {amount}cm [OK]")
+            self._height = float(amount)
+            print(f"Height updated: {int(self._height)}cm")
+
+    def init_height(self, amount: float) -> None:
+        """Initialize height with default fallback when value is invalid."""
+        if amount < 0:
+            print(f"{self._name}: Error, height can't be negative")
+            print("Height update rejected")
+            self._height = 0.0
+        else:
+            self._height = float(amount)
+
 
 
 if __name__ == "__main__":
     print("=== Garden Security System ===")
-    rose = SecurePlant("Rose", 25, 30)
-    rose.set_height(-5)
+    rose = Plant("Rose", 15, 10)
+    print("Plant created:", end=" ")
+    rose.show()
     print()
-    print(rose)
+    rose.set_height(25)
+    rose.set_age(30)
+    print()
+
+    rose.set_height(-5)
+    rose.set_age(-8)
+    print()
+
+    print("Current state:", end=" ")
+    rose.show()
