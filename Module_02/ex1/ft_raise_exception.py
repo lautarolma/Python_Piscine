@@ -5,6 +5,7 @@ class TempError(Exception):
     """
     pass
 
+
 def input_temperature(temp_str: str = "N/A") -> int | None:
     """
     Validates the input string representing a temperature.
@@ -14,7 +15,8 @@ def input_temperature(temp_str: str = "N/A") -> int | None:
         temp_str (str): The temperature value as a string.
 
     Returns:
-        int | None: The integer temperature if valid, or None if conversion fails.
+        int | None: The integer temperature if valid, or None if
+        conversion fails.
     """
     try:
         temp = int(temp_str)
@@ -40,7 +42,8 @@ def input_temperature(temp_str: str = "N/A") -> int | None:
     print(f"Input data is '{temp}'")
     print(f"Temperature is now {temp}°C")
     return temp
-    
+
+
 def test_temperature() -> None:
     """
     Runs a battery of tests with normal, invalid, and extreme
@@ -61,6 +64,7 @@ def test_temperature() -> None:
         print(e)
     print()
     print("All tests completed - program didn't crash!")
+
 
 if __name__ == "__main__":
     print("=== Garden Temperature Checker ===")
