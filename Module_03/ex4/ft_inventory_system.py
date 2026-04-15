@@ -1,7 +1,14 @@
+"""Inventory System Analysis - Exercise 4.
+
+Parses command-line parameters of the form 'item:quantity', reports
+errors for invalid parameters, and prints inventory statistics.
+"""
+
 import sys
 
 
 def main() -> None:
+    """Parse inventory args, compute percentages and print summary."""
     inventory: dict[str, int] = {}
     args = sys.argv[1:]
     for arg in args:
@@ -23,7 +30,7 @@ def main() -> None:
         return print("Inventory is empty — nothing to analyze.")
 
     print(f"Got inventory: {inventory}")
-    print(f"Item list: {inventory.keys()}")
+    print(f"Item list: {list(inventory.keys())}")
     n_items = len(inventory.values())
     print(f"Total quantity of the {n_items} items: {total_qty}")
     first_item = list(inventory.keys())[0]
@@ -52,14 +59,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-# He de tomar nota del caso de la iniciacion a None, que ha de ser
-# verificada en cada ocasion que se utilize esta variable con posterioridad
-# (en este caso respecto a su uso como indice, una vez inicialiazada.
-# mypy desconoce esta instancia y retorna error si no hay un checker
-# especifico de "if variable is not None:" en cada implementacion posterior.
-# Para este caso en especifico he reemplazado la inicializacion de la Key
-# del diccionario a la primer key del mismo, para evitar preinicialiazarla
-# a None. Para esto he tenido que primero castear la lista de llaves del
-# dictionary a list, para poder acceder por el indice [0] al primer
-# elemento (diccionarios no son accesibles por indice).

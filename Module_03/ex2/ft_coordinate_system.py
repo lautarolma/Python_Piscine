@@ -1,23 +1,30 @@
+"""Game coordinate utilities for 3D player positions.
+
+Provides a small interactive utility to read 3D coordinates from the
+user, validate them, and compute Euclidean distances.
+"""
+
 import math
 
 
 def get_player_pos() -> tuple[float, float, float]:
-    """
-    Asks the user for the new player coordinates in the format x,y,z
-    • Handles improper inputs
-    • Retries until a valid set of coordinates is provided
-    • Returns a tuple containing the player's current 3D coordinates
+    """Prompt the user until valid 3D coordinates 'x,y,z' are provided.
+
+    Returns a tuple of three floats representing the player's position.
+    Prints short, specific error messages for invalid input and retries
+    until a valid triple is entered.
     """
     while True:
-        input_user = input(
-            "Enter new coordinates as floats in format 'x,y,z': "
+        prompt = input(
+            "Enter new coordinates as floats in format "
+            "'x,y,z': "
         )
         try:
-            parts = input_user.split(',')
+            parts = prompt.split(',')
             if len(parts) != 3:
                 raise ValueError("Invalid syntax")
 
-            coords = []
+            coords: list[float] = []
             for part in parts:
                 value = float(part.strip())
                 coords.append(value)
@@ -38,11 +45,11 @@ def get_player_pos() -> tuple[float, float, float]:
 
 def calculate_distance(
     p1: tuple[float, float, float],
-    p2: tuple[float, float, float] = (0, 0, 0)
+    p2: tuple[float, float, float] = (0.0, 0.0, 0.0)
 ) -> float:
-    """
-    Calculate Euclidean distance between two 3D points.
-    If p2 is not provided, calculates distance to origin (0, 0, 0).
+    """Return the Euclidean distance between two 3D points.
+
+    If p2 is omitted, the distance to the origin is returned.
     """
     return math.sqrt(
         (p2[0] - p1[0]) ** 2 +
@@ -52,6 +59,7 @@ def calculate_distance(
 
 
 def main() -> None:
+    """Interactive main for reading two positions and printing distances."""
     print("=== Game Coordinate System ===")
     print("Get a first set of coordinates")
     pos1 = get_player_pos()

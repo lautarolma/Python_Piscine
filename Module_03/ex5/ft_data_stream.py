@@ -1,4 +1,12 @@
+"""Game Data Stream Processor - Exercise 5.
+
+Demonstrates generator usage: an infinite event generator and a
+consumer that yields items randomly removed from a list. Keeps
+output readable for evaluation and avoids storing unnecessary data.
+"""
+
 import random
+from typing import Generator
 
 
 # Players and actions available in the game
@@ -12,12 +20,12 @@ ACTIONS = [
     "climb",
     "swim",
     "release",
-    "use"
+    "use",
 ]
 
 
-def gen_event():
-    """Generator of events: infinite stream of (name, action) tuples.
+def gen_event() -> Generator[tuple[str, str], None, None]:
+    """Infinite generator yielding random (player, action) tuples.
 
     Yields one random (player, action) tuple each time next() is called.
     Does not store anything in memory - produces on demand.
@@ -28,17 +36,13 @@ def gen_event():
         yield (name, action)
 
 
-def consume_event(events_list):
-    """Generator that consumes events from a list by random selection.
+def consume_event(
+    events_list: list[tuple[str, str]]
+) -> Generator[tuple[str, str], None, None]:
+    """Yield items by randomly removing them from a list until empty.
 
-    Each time next() is called, picks a random index, removes the event
-    from the list, and yields it. Stops when the list is empty.
-
-    Args:
-        events_list: List of (name, action) tuples to consume.
-
-    Yields:
-        Tuple (name, action) removed from the list.
+    Useful to demonstrate consuming a finite collection with a
+    generator without allocating additional structures.
     """
     while events_list:
         idx = random.randint(0, len(events_list) - 1)
@@ -46,7 +50,8 @@ def consume_event(events_list):
         yield evento
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run generator demo: print 1000 events and consume a small list."""
     print("=== Game Data Stream Processor ===")
 
     # Generate 1000 events - using next() 1000 times
@@ -63,3 +68,7 @@ if __name__ == "__main__":
     for event in consume_event(ten_events):
         print(f"Got event from list: {event}")
         print(f"Remains in list: {ten_events}")
+
+
+if __name__ == "__main__":
+    main()
