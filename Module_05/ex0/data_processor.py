@@ -1,42 +1,71 @@
-"""Simple data processors for numeric, text, and log payloads."""
+"""
+    Data processor module for handling different payload types.
+
+    This module provides an abstract base class and concrete implementations
+    for processing numeric, text, and structured log data. Each processor
+    validates input and stores processed items in a FIFO queue with ranking.
+"""
 
 from abc import ABC, abstractmethod
 from typing import Any
 
 
 class DataProcessor(ABC):
-    """Base processor that stores validated items as ranked strings.
+    """
+        Base processor that stores validated items as ranked strings.
 
-    Subclasses define validation and ingestion rules for a specific input type.
+        Subclasses define validation and ingestion rules for a specific input
+        type.
     """
 
     def __init__(self) -> None:
-        """Initialize internal FIFO storage and rank counter."""
+        """
+            Initialize the data processor with empty storage and counter.
+
+            Attributes:
+                _storage: FIFO queue storing tuples of (rank, value).
+                _current_rank: Counter tracking item insertion order.
+        """
         self._storage: list[tuple[int, str]] = []
         self._current_rank = 0
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
-        """Check whether 'data' is valid for this processor."""
+        """
+            Check whether input data is valid for this processor.
+
+            Subclasses must implement type-specific validation rules.
+
+            Args:
+                data: The input data to validate.
+
+            Returns:
+                True if data is valid, False otherwise.
+        """
         pass
 
     @abstractmethod
     def ingest(self, data: Any) -> None:
-        """Store validated input data in the internal queue.
+        """
+            Store validated input data in the internal queue.
 
-        Raises:
-            ValueError: If 'data' is invalid for the processor.
+            Args:
+                data: The input data to ingest and store.
+
+            Raises:
+                ValueError: If data fails validation for this processor.
         """
         pass
 
     def output(self) -> tuple[int, str]:
-        """Return and remove the oldest processed item from the queue.
+        """
+            Return and remove the oldest processed item from the queue.
 
-        Returns:
-            tuple[int, str]: A pair '(rank, value)' from the queue.
+            Returns:
+                Tuple containing (rank: int, value: str) of the oldest item.
 
-        Raises:
-            IndexError: If there are no processed items available.
+            Raises:
+                IndexError: If the storage queue is empty.
         """
         if not self._storage:
             raise IndexError("No data to output")
@@ -55,10 +84,14 @@ class NumericProcessor(DataProcessor):
         return False
 
     def ingest(self, data: int | float | list[int] | list[float]) -> None:
-        """Store numeric input items as strings with incremental rank.
+        """
+            Store numeric input items as strings with incremental rank.
 
-        Raises:
-            ValueError: If 'data' does not match the numeric contract.
+            Args:
+                data: A number or list of numbers to ingest.
+
+            Raises:
+                ValueError: If data is not numeric or list of numbers.
         """
         if not self.validate(data):
             raise ValueError("Improper numeric data")
@@ -82,10 +115,14 @@ class TextProcessor(DataProcessor):
         return False
 
     def ingest(self, data: str | list[str]) -> None:
-        """Store text input items with incremental rank.
+        """
+            Store text input items with incremental rank.
 
-        Raises:
-            ValueError: If 'data' does not match the text contract.
+            Args:
+                data: A string or list of strings to ingest.
+
+            Raises:
+                ValueError: If data is not a string or list of strings.
         """
         if not self.validate(data):
             raise ValueError("Improper text data")
@@ -125,10 +162,16 @@ class LogProcessor(DataProcessor):
         return check_level and check_message
 
     def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
-        """Store logs as '"LEVEL: message"' strings with incremental rank.
+        """
+            Store logs as formatted strings with incremental rank.
 
-        Raises:
-            ValueError: If 'data' does not match the log contract.
+            Args:
+                data: Log dict or list of dicts with 'log_level' and
+                'log_message'.
+
+            Raises:
+                ValueError: If data does not match the log dictionary
+                contract.
         """
         if not self.validate(data):
             raise ValueError("Improper log data")
